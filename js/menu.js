@@ -29,12 +29,75 @@ function generateMenu(){
 
 	pageName = "index.html";
 	funcName = "Home";
-	s += '<li' + checkActivePage(pageName) + '><a href="pageName">' + funcName + '</a></li>';
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
 	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
-	pageName = "signin.html";
+
+	s += '		<li class="dropdown">';
+	s += '			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Chat<b class="caret"></b></a>';
+	s += '			<ul class="dropdown-menu">';
+
+	pageName = "chat_text.html";
+	funcName = "Text Chat";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	pageName = "chat_voice.html";
+	funcName = "Voice Chat";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	s += '			</ul>';
+	s += '		</li>';
+
+	s += '		<li class="dropdown">';
+	s += '			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Video<b class="caret"></b></a>';
+	s += '			<ul class="dropdown-menu">';
+
+	pageName = "video_play.html";
+	funcName = "Play Video";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	pageName = "video_share.html";
+	funcName = "Share Video";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	s += '			</ul>';
+	s += '		</li>';
+
+	s += '		<li class="dropdown">';
+	s += '			<a href="#" class="dropdown-toggle" data-toggle="dropdown">My Profile<b class="caret"></b></a>';
+	s += '			<ul class="dropdown-menu">';
+
+	pageName = "mynotification.html";
+	funcName = "My Notification";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	pageName = "mymate.html";
+	funcName = "My Mate";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	pageName = "myfriend.html";
+	funcName = "My Friend";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	pageName = "mysettings.html";
+	funcName = "My Settings";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
+	s += '			</ul>';
+	s += '		</li>';
+	
+	pageName = "login.html";
 	funcName = "Login";
-	s += '<li' + checkActivePage(pageName) + '><a href="pageName">' + funcName + '</a></li>';
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
 	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+	
 	//console.log(s);
 	$('#sysUserMenu').append(s);
 	$('#sysUserBottomMenu').append(s1);

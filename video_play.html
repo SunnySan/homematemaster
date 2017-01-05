@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author"      content="Sunny Sun">
+	
+	<title>HomeMate Master</title>
+
+	<link rel="shortcut icon" href="assets/images/gt_favicon.ico">
+	
+	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<!--<link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css"><!-- Bootstrap 3.3.5 -->
+  
+  <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css" /><!-- Jquery UI -->
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body class="home">
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo.png" alt=""></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right" id="sysUserMenu" name="sysUserMenu">
+					<!--<div id="sysUserMenu" name="sysUserMenu"></div>-->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="index.html">Home</a></li>
+			<li class="active">Play Video</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-xs-12 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Play Video</h1>
+				</header>
+				
+				<div class="col-md-12">
+					<h3>Dancine</h3>
+					<div class="panel panel-default col-md-3">
+						<div class="panel-body">
+							<iframe src="http://www.youtube.com/embed/yeI9yOyhKSo" width="100%" frameborder="0" scrolling="no"></iframe>
+						</div><!-- <div class="panel-body"> -->
+					</div><!-- <div class="panel panel-default col-md-3"> -->
+
+					<div class="panel panel-default col-md-3">
+						<div class="panel-body">
+							<iframe src="http://www.youtube.com/embed/uDe4ME1hMcc" width="100%" frameborder="0" scrolling="no"></iframe>
+						</div><!-- <div class="panel-body"> -->
+					</div><!-- <div class="panel panel-default col-md-3"> -->
+
+					<div class="panel panel-default col-md-3">
+						<div class="panel-body">
+							<iframe src="http://www.youtube.com/embed/wXCu-Sn8WnQ" width="100%" frameborder="0" scrolling="no"></iframe>
+						</div><!-- <div class="panel-body"> -->
+					</div><!-- <div class="panel panel-default col-md-3"> -->
+
+					<div class="panel panel-default col-md-3">
+						<div class="panel-body">
+							<iframe src="http://www.youtube.com/embed/aV5Ljj44s7Y" width="100%" frameborder="0" scrolling="no"></iframe>
+						</div><!-- <div class="panel-body"> -->
+					</div><!-- <div class="panel panel-default col-md-3"> -->
+
+				</div><!-- <div class="col-md-12"> -->
+				
+			</article>
+			<!-- /Article -->
+
+		</div>
+	</div>	<!-- /container -->
+
+
+	<footer id="footer" class="top-space">
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav" id="sysUserBottomMenu" name="sysUserBottomMenu">
+							</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, Sunny Sun. Designed by <a href="http://gettemplate.com/" rel="designer" target="_blank">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+	</footer>	
+		
+
+
+
+
+</body>
+</html>
+
+<script src="js/jQuery-2.1.4.min.js"></script><!-- jQuery 2.1.4 -->
+<script src="js/bootstrap.min.js"></script><!-- Bootstrap 3.3.5 -->
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/jquery.blockUI.js"></script>
+
+<script src="assets/js/headroom.min.js"></script>
+<script src="assets/js/jQuery.headroom.min.js"></script>
+<script src="assets/js/template.js"></script>
+
+<script type="text/javascript" src="js/menu.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script><!--處理cookie，參考網頁：https://github.com/carhartl/jquery-cookie -->
+
+<script>
+	$(function () {
+
+		$('#User_ID').focus();
+		
+		$("#frmMain").keypress(function(event) {
+			if (event.which == 13) {
+				event.preventDefault();
+				doLogin();
+			}
+		});
+
+	});
+</script>
+
+<script>
+
+	function doLogin(){
+		var uid = $('#User_ID').val();
+		if (beEmpty(uid)){
+				msgBox('Input error, please check your input value.');
+				return false;
+		}
+
+		//先把cookie中的資料清除
+		setLocalValue("HomeMateLoginUserID", "");
+
+		setLocalValue("HomeMateLoginUserID", uid, 90);	//90天有效
+		
+		var src = getParameterByName("src");	//看看URL有沒有 ?src=XXX 的參數，如果有的話就導到src指定的頁面，若沒有就回首頁
+		if (beEmpty(src)){
+			src = "index.html";
+		}else{
+			src = src + ".html";
+		}
+
+		location.href = src;
+	}	//function doLogin(uid, upwd){
+
+</script>
+
