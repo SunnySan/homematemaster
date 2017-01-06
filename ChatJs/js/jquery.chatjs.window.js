@@ -24,7 +24,8 @@ var ChatWindow = (function () {
         this.options = $.extend({}, defaultOptions, options);
 
         // window
-        this.$window = $("<div/>").addClass("chat-window").appendTo($("#friendWindow"));
+        this.$window = $("<div/>").addClass("chat-window").appendTo($("#friendWindow"));	//Sunny: friendWindor 原本是 body
+        this.$window.addClass('pull-left');	//Sunny: 增加此列
 
         if (this.options.width)
             this.$window.css("width", this.options.width);

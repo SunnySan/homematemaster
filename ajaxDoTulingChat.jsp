@@ -3,6 +3,8 @@
 
 <%@page import="java.net.InetAddress" %>
 <%@page import="org.json.simple.JSONObject" %>
+<%@page import="org.json.simple.parser.JSONParser" %>
+<%@page import="org.json.simple.parser.ParseException" %>
 <%@page import="java.util.*" %>
 
 <%@include file="00_constants.jsp"%>
@@ -50,5 +52,5 @@ sResult = sendToTuling(info, loc, userid);
 out.print(sResult);
 out.flush();
 
-writeLog("debug", obj.toString());
+writeLog("debug", sResult);
 %>

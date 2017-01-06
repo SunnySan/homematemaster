@@ -84,6 +84,7 @@ function isEmail(email) {
 
 /**********顯示loading中的BlockUI**********/
 function showBlockUI(){
+	return;
 /*
 	$.blockUI({
 		message: '<img src="images/loading.gif">資料更新中，請稍候...</img>',
@@ -120,6 +121,7 @@ function showBlockUI(){
 
 /**********解除BlockUI**********/
 function unBlockUI(){
+	return;
 	$.unblockUI();
 }
 

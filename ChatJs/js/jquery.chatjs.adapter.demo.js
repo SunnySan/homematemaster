@@ -8,9 +8,12 @@ var DemoAdapterConstants = (function () {
 
     DemoAdapterConstants.DEFAULT_ROOM_ID = 1;
 
-    DemoAdapterConstants.ECHOBOT_TYPING_DELAY = 1000;
+    //DemoAdapterConstants.ECHOBOT_TYPING_DELAY = 1000;
 
-    DemoAdapterConstants.ECHOBOT_REPLY_DELAY = 3000;
+    //DemoAdapterConstants.ECHOBOT_REPLY_DELAY = 3000;
+    DemoAdapterConstants.ECHOBOT_TYPING_DELAY = 100;
+
+    DemoAdapterConstants.ECHOBOT_REPLY_DELAY = 100;
     return DemoAdapterConstants;
 })();
 
@@ -61,8 +64,9 @@ var DemoServerAdapter = (function () {
         myUser.Id = DemoAdapterConstants.CURRENT_USER_ID;
         myUser.RoomId = DemoAdapterConstants.DEFAULT_ROOM_ID;
         myUser.Name = "Master";
-        myUser.Email = "andrerpena@gmail.com";
-        myUser.ProfilePictureUrl = "http://www.gravatar.com/avatar/574700aef74b21d386ba1250b77d20c6.jpg";
+        myUser.Email = "sunny561227@gmail.com";
+        //myUser.ProfilePictureUrl = "http://www.gravatar.com/avatar/574700aef74b21d386ba1250b77d20c6.jpg";
+        myUser.ProfilePictureUrl = "images/man48.png";
         myUser.Status = 1 /* Online */;
 
         // Echobot is the guy that will repeat everything you say
@@ -70,8 +74,9 @@ var DemoServerAdapter = (function () {
         echoBotUser.Id = DemoAdapterConstants.ECHOBOT_USER_ID;
         echoBotUser.RoomId = DemoAdapterConstants.DEFAULT_ROOM_ID;
         echoBotUser.Name = "HomeMate";
-        echoBotUser.Email = "echobot1984@gmail.com";
-        echoBotUser.ProfilePictureUrl = "http://www.gravatar.com/avatar/4ec6b20c5fed48b6b01e88161c0a3e20.jpg";
+        echoBotUser.Email = "sunny561227@gmail.com";
+        //echoBotUser.ProfilePictureUrl = "http://www.gravatar.com/avatar/4ec6b20c5fed48b6b01e88161c0a3e20.jpg";
+        echoBotUser.ProfilePictureUrl = "images/mate48.png";
         echoBotUser.Status = 1 /* Online */;
 
         // adds the users in the global user list
@@ -135,14 +140,45 @@ var DemoServerAdapter = (function () {
                     echoMessage.UserFromId = DemoAdapterConstants.ECHOBOT_USER_ID; // It will be from Echobot
                     echoMessage.RoomId = roomId;
                     echoMessage.ConversationId = conversationId;
-                    echoMessage.Message = "You said: " + messageText;
+                    //echoMessage.Message = "You said: " + messageText;
+                    //Sunny: 以下是新增的
+                    var User_ID = $('#deviceStatus').html();
+										var sData = "info=" + messageText + "&userid=" + User_ID;
+										
+										getDataFromServer("ajaxDoTulingChat.jsp", sData, "json", function(data){
+											console.log(JSON.stringify(data));
+											if (!data.resultCode || !data.resultText){
+												msgBox("Unable to get process result.");
+											}else{
+												if (data.resultCode=="00000"){
+													var ss = data.data.text;
+													if (notEmpty(ss)){
+														if (notEmpty(data.data.url)) ss += "\n" + data.data.url;
+														echoMessage.Message = ss;
+				                    // if it's not a private message, the echo message will be to the current user
+				                    if (!roomId && !conversationId)
+				                        echoMessage.UserToId = DemoAdapterConstants.CURRENT_USER_ID;
+				
+				                    // this will send a message to the user 1 (you) as if it was from user 2 (Echobot)
+				                    _this.clientAdapter.triggerMessagesChanged(echoMessage);
+													}
+												}else{
+													msgBox("Unable to get process result." + data.resultText);
+												}
+											}
+								
+										});	//getDataFromServer("xxx.jsp", sData, "json", function(data){
 
+
+
+										/*
                     // if it's not a private message, the echo message will be to the current user
                     if (!roomId && !conversationId)
                         echoMessage.UserToId = DemoAdapterConstants.CURRENT_USER_ID;
 
                     // this will send a message to the user 1 (you) as if it was from user 2 (Echobot)
                     _this.clientAdapter.triggerMessagesChanged(echoMessage);
+                    */
                 }, DemoAdapterConstants.ECHOBOT_REPLY_DELAY);
             });
         }, DemoAdapterConstants.ECHOBOT_TYPING_DELAY);

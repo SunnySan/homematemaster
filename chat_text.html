@@ -65,7 +65,7 @@
 			<article class="col-xs-12 maincontent">
 				<header class="page-header">
 					<h1 class="page-title">Text Chat</h1>
-					<span id="deviceStatus" class="pull-right"></span>
+					<span class="pull-right">Homemate:&nbsp;</span><span id="deviceStatus" class="pull-right"></span>
 				</header>
 				
 				<div class="col-md-12" id="friendWindow">
@@ -138,16 +138,23 @@
 <script src="ChatJs/js/jquery.chatjs.controller.js"></script>
 <link rel="stylesheet" href="ChatJs/css/jquery.chatjs.css"/>
 
+<!-- Google 翻譯 API -->
+
+
 <script>
+	var User_ID = "";
+
 	$(function () {
 
-		var User_ID = getLocalValue("HomeMateLoginUserID");
+		User_ID = getLocalValue("HomeMateLoginUserID");
 		if (beEmpty(User_ID)) location.href="login.html?src=chat_text.html";
-		$('#deviceStatus').html("HomeMate:&nbsp;" + User_ID);
+		$('#deviceStatus').html(User_ID);
 		$('#deviceStatus').css("color", "#04B404");
 		
 	});
+
 </script>
+
 
 <script type="text/javascript">
     $(function () {
@@ -169,10 +176,11 @@
             adapter: new DemoAdapter()
         });
         
-        $('.chat-window').addClass('pull-left');
-        $('.chat-window').css('margin-left', '50px');
+        //$('.chat-window').addClass('pull-left');
+        //$('.chat-window').css('margin-left', '50px');
     });
 </script>
+
 
 <script>
 

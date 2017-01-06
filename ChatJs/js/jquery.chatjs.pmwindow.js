@@ -47,7 +47,7 @@ var ChatPmWindow = (function () {
                 var messageBoardOptions = new MessageBoardOptions();
                 messageBoardOptions.adapter = _this.options.adapter;
                 messageBoardOptions.userId = _this.options.userId;
-                messageBoardOptions.height = 235;
+                messageBoardOptions.height = 296;
                 messageBoardOptions.otherUserId = _this.options.otherUserId;
                 messageBoardOptions.chatJsContentPath = _this.options.chatJsContentPath;
                 window.$windowInnerContent.messageBoard(messageBoardOptions);

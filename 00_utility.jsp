@@ -14,6 +14,7 @@
 <%@ page import="javax.mail.*"%>
 <%@ page import="javax.mail.internet.*"%>
 <%@ page import="javax.activation.*"%>
+<%@ page import="com.spreada.utils.chinese.ZHConverter"%>
 
 <%
 //Oracle connection
@@ -563,12 +564,17 @@ public String sendToTuling(String info, String loc, String userid){
 	String		sResultCode			= gcResultCodeSuccess;
 	String		sResultText			= gcResultTextSuccess;
 
+	ZHConverter converter = ZHConverter.getInstance(ZHConverter.SIMPLIFIED);
+	
 	JSONObject objBody = new JSONObject();
 	objBody.put("key", gcTulingAPIKey);
-	objBody.put("info", info);
-	if (notEmpty(loc)) objBody.put("loc", loc);
+	objBody.put("info", converter.convert(info));
+	if (notEmpty(loc)) objBody.put("loc", converter.convert(loc));
 	if (notEmpty(userid)) objBody.put("userid", userid);
+	writeLog("debug", "send to Tuling: " + objBody.toString(), "utility");
 
+	Object objdata = null;
+	
 	try
 	{
 		URL u;
@@ -579,33 +585,51 @@ public String sendToTuling(String info, String loc, String userid){
 		uc.setDoInput(true);
 		uc.setRequestProperty("Content-Type", "application/json");
 		uc.setAllowUserInteraction(false);
+		/*
 		DataOutputStream dstream = new DataOutputStream(uc.getOutputStream());
 		dstream.writeBytes(objBody.toString());
 		dstream.close();
+		*/
+
+    OutputStream outputStream=uc.getOutputStream();
+    outputStream.write(objBody.toString().getBytes("UTF-8"));
+    outputStream.close();
+
+
 		InputStream in = uc.getInputStream();
-		BufferedReader r = new BufferedReader(new InputStreamReader(in));
+		//BufferedReader r = new BufferedReader(new InputStreamReader(in));
+		BufferedReader r = new BufferedReader(new InputStreamReader( uc.getInputStream(), "utf-8"));
 		StringBuffer buf = new StringBuffer();
 		String line;
 		while ((line = r.readLine())!=null) {
+			//writeLog("debug", "line: " + line, "utility");
 			buf.append(line);
 		}
 		in.close();
 		s = buf.toString();	//正常取得MSP回應值
+		writeLog("debug", "Tuling reply: " + s, "utility");
+		//s =  new String(s.getBytes("UTF-8"), "UTF-8");
+		s = ZHConverter.convert(s, ZHConverter.TRADITIONAL);
+		JSONParser parser = new JSONParser();
+		objdata = parser.parse(s);
 		
-	}catch (IOException e){ 
+	}catch (Exception e){ 
 		sResultCode			= gcResultCodeUnknownError;
 		sResultText			= gcResultTextUnknownError;
 		s = "連線錯誤，訊息如下：" + e.toString();
+		writeLog("debug", "failed to call Tuling: " + s, "utility");
 	}
 	
-	objBody = new JSONObject();
-	objBody.put("resultCode", sResultCode);
-	objBody.put("resultText", sResultText);
-	objBody.put("data", s);
-	return objBody.toString();
+	JSONObject obj = new JSONObject();
+	obj.put("resultCode", sResultCode);
+	obj.put("resultText", sResultText);
+	obj.put("data", objdata);
+	writeLog("debug", "return to caller: " + obj.toString(), "utility");
+	return obj.toString();
 }	////呼叫 HSM 執行 API
 
 /*********************************************************************************************************************/
+
 //讓單引號等字元可以寫入MySQL DB中，用法為escape(String)
 private static final HashMap<String,String> sqlTokens;
 private static java.util.regex.Pattern sqlTokenPattern;
