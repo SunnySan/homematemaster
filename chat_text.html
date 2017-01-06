@@ -27,6 +27,8 @@
 	<script src="assets/js/html5shiv.js"></script>
 	<script src="assets/js/respond.min.js"></script>
 	<![endif]-->
+	
+	<link rel="stylesheet" href="Styles/styles.css"/><!-- ChatJS 用 -->
 </head>
 
 <body class="home">
@@ -54,7 +56,7 @@
 
 		<ol class="breadcrumb">
 			<li><a href="index.html">Home</a></li>
-			<li class="active">Login</li>
+			<li class="active">Text Chat</li>
 		</ol>
 
 		<div class="row">
@@ -62,46 +64,16 @@
 			<!-- Article main content -->
 			<article class="col-xs-12 maincontent">
 				<header class="page-header">
-					<h1 class="page-title">Login</h1>
+					<h1 class="page-title">Text Chat</h1>
+					<span id="deviceStatus" class="pull-right"></span>
 				</header>
 				
-				<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<h3 class="thin text-center">Login to your account</h3>
-							<p class="text-center text-muted">Please use the device ID you set in HomeMate APP as the Username below. Password can be omitted for testing purpose.</p>
-							<hr>
-							
-							<form id="frmMain" name="frmMain" action="#" method="post">
-								<div class="top-margin">
-									<label>Username<span class="text-danger">*</span></label>
-									<input type="text" class="form-control" id="User_ID">
-								</div>
-								<div class="top-margin">
-									<label>Password <span class="text-danger"></span></label>
-									<input type="password" class="form-control" id="User_Password">
-								</div>
-
-								<hr>
-
-								<div class="row">
-									<div class="col-lg-8">
-										<b><a href="#">Forgot password?</a></b>
-									</div>
-									<div class="col-lg-4 text-right">
-										<button class="btn btn-action" role="button" onclick="doLogin();">Login</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-
-				</div>
-				
+				<div class="col-md-12" id="friendWindow">
+				</div><!-- <div class="col-md-12"> -->
 			</article>
 			<!-- /Article -->
 
-		</div>
+		</div><!-- <div class="row"> -->
 	</div>	<!-- /container -->
 
 
@@ -152,48 +124,67 @@
 <script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script><!--處理cookie，參考網頁：https://github.com/carhartl/jquery-cookie -->
 
+<!-- chatjs files-->
+<script src="ChatJs/js/jquery.autosize.js"></script>
+<script src="ChatJs/js/jquery.chatjs.utils.js"></script>
+<script src="ChatJs/js/jquery.chatjs.adapter.servertypes.js"></script>
+<script src="ChatJs/js/jquery.chatjs.adapter.js"></script>
+<script src="ChatJs/js/jquery.chatjs.adapter.demo.js"></script>
+<script src="ChatJs/js/jquery.chatjs.window.js"></script>
+<script src="ChatJs/js/jquery.chatjs.messageboard.js"></script>
+<script src="ChatJs/js/jquery.chatjs.userlist.js"></script>
+<script src="ChatJs/js/jquery.chatjs.pmwindow.js"></script>
+<script src="ChatJs/js/jquery.chatjs.friendswindow.js"></script>
+<script src="ChatJs/js/jquery.chatjs.controller.js"></script>
+<link rel="stylesheet" href="ChatJs/css/jquery.chatjs.css"/>
+
 <script>
 	$(function () {
 
 		var User_ID = getLocalValue("HomeMateLoginUserID");
-		if (notEmpty(User_ID)) $('#User_ID').val(User_ID);
+		if (beEmpty(User_ID)) location.href="login.html?src=chat_text.html";
+		$('#deviceStatus').html("HomeMate:&nbsp;" + User_ID);
+		$('#deviceStatus').css("color", "#04B404");
 		
-		$('#User_ID').focus();
-		
-		$("#frmMain").keypress(function(event) {
-			if (event.which == 13) {
-				event.preventDefault();
-				doLogin();
-			}
-		});
-
 	});
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $.chat({
+            // your user information
+            userId: 1,
+            // id of the room. The friends list is based on the room Id
+            roomId: 1,
+            // text displayed when the other user is typing
+            typingText: ' is typing...',
+            // title for the rooms window
+            roomsTitleText: 'Rooms',
+            // title for the 'available rooms' rab
+            availableRoomsText: 'Available rooms',
+            // text displayed when there's no other users in the room
+            emptyRoomText: "There's no one around here. You can still open a session in another browser and chat with yourself :)",
+            // the adapter you are using
+            chatJsContentPath: '/basics/chatjs/',
+            adapter: new DemoAdapter()
+        });
+        
+        $('.chat-window').addClass('pull-left');
+        $('.chat-window').css('margin-left', '50px');
+    });
 </script>
 
 <script>
 
-	function doLogin(){
-		event.preventDefault();
-		var uid = $('#User_ID').val();
-		if (beEmpty(uid)){
-				msgBox('Input error, please check your input value.');
-				return false;
-		}
-
-		//先把cookie中的資料清除
-		setLocalValue("HomeMateLoginUserID", "");
-
-		setLocalValue("HomeMateLoginUserID", uid, 90);	//90天有效
-		
-		var src = getParameterByName("src");	//看看URL有沒有 ?src=XXX 的參數，如果有的話就導到src指定的頁面，若沒有就回首頁
-		if (beEmpty(src)){
-			src = "index.html";
-		}else{
-			//src = src + ".html";
-		}
-
-		location.href = src;
-	}	//function doLogin(uid, upwd){
+	function doPlay(video_type, video_id, screen_size){
+		var obj = new Object();
+		obj.action = "video";
+		obj.video_type = video_type;
+		obj.video_id = video_id;
+		obj.screen_size = screen_size;
+		var payload= JSON.stringify(obj);
+		publish_message(payload);
+	}	//function doPlay(video_type, video_id, screen_size){
 
 </script>
 

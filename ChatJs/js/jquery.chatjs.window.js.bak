@@ -24,7 +24,7 @@ var ChatWindow = (function () {
         this.options = $.extend({}, defaultOptions, options);
 
         // window
-        this.$window = $("<div/>").addClass("chat-window").appendTo($("#friendWindow"));
+        this.$window = $("<div/>").addClass("chat-window").appendTo($("body"));
 
         if (this.options.width)
             this.$window.css("width", this.options.width);

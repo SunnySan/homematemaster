@@ -36,7 +36,7 @@ class ChatWindow implements IWindow<boolean> {
         this.options = $.extend({}, defaultOptions, options);
 
         // window
-        this.$window = $("<div/>").addClass("chat-window").appendTo($("body"));
+        this.$window = $("<div/>").addClass("chat-window").appendTo($("#friendWindow"));
 
         if (this.options.width)
             this.$window.css("width", this.options.width);

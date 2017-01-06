@@ -1,30 +1,42 @@
 ﻿/// <reference path="../../Scripts/Typings/jquery/jquery.d.ts"/>
 /// <reference path="jquery.chatjs.interfaces.ts"/>
 
-var ChatWindowOptions = (function () {
-    function ChatWindowOptions() {
-    }
-    return ChatWindowOptions;
-})();
+interface JQueryStatic {
+    chatWindow(options:ChatWindowOptions): ChatWindow;
+}
+
+class ChatWindowOptions {
+    width:number;
+    height:number;
+    canClose:boolean;
+    title:string;
+    isMaximized:boolean;
+    // event triggered when the window is created.
+    // in order to add content to the newly created window, use chatWindow.$windowInnerContent
+    onCreated:(chatWindow:ChatWindow) => void;
+    onClose:(chatWindow:ChatWindow) => void;
+    // called when the user minimizes or maximizes the window
+    onMaximizedStateChanged:(chatWindow:ChatWindow, isMaximized:boolean) => void;
+}
 
 // a generic window that shows in the bottom right corner. It can have any content in it.
-var ChatWindow = (function () {
-    function ChatWindow(options) {
-        var _this = this;
+class ChatWindow implements IWindow<boolean> {
+    constructor(options:ChatWindowOptions) {
+
         var defaultOptions = new ChatWindowOptions();
         defaultOptions.isMaximized = true;
         defaultOptions.canClose = true;
-        defaultOptions.onCreated = function () {
+        defaultOptions.onCreated = () => {
         };
-        defaultOptions.onClose = function () {
+        defaultOptions.onClose = () => {
         };
-        defaultOptions.onMaximizedStateChanged = function () {
+        defaultOptions.onMaximizedStateChanged = () => {
         };
 
         this.options = $.extend({}, defaultOptions, options);
 
         // window
-        this.$window = $("<div/>").addClass("chat-window").appendTo($("#friendWindow"));
+        this.$window = $("<div/>").addClass("chat-window").appendTo($("body"));
 
         if (this.options.width)
             this.$window.css("width", this.options.width);
@@ -33,14 +45,12 @@ var ChatWindow = (function () {
         this.$windowTitle = $("<div/>").addClass("chat-window-title").appendTo(this.$window);
         if (this.options.canClose) {
             var $closeButton = $("<div/>").addClass("close").appendTo(this.$windowTitle);
-            $closeButton.click(function (e) {
+            $closeButton.click(e => {
                 e.stopPropagation();
-
                 // removes the window
-                _this.$window.remove();
-
+                this.$window.remove();
                 // triggers the event
-                _this.options.onClose(_this);
+                this.options.onClose(this);
             });
         }
         $("<div/>").addClass("text").text(this.options.title).appendTo(this.$windowTitle);
@@ -52,41 +62,42 @@ var ChatWindow = (function () {
         this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo(this.$windowContent);
 
         // wire everything up
-        this.$windowTitle.click(function () {
-            _this.toggleMaximizedState();
+        this.$windowTitle.click(() => {
+            this.toggleMaximizedState();
         });
 
         this.setState(this.options.isMaximized, false);
 
         this.options.onCreated(this);
     }
-    ChatWindow.prototype.getWidth = function () {
+
+    getWidth() {
         return this.$window.outerWidth();
-    };
+    }
 
-    ChatWindow.prototype.setRightOffset = function (offset) {
+    setRightOffset(offset:number) {
         this.$window.css("right", offset);
-    };
+    }
 
-    ChatWindow.prototype.setTitle = function (title) {
+    setTitle(title:string) {
         $("div[class=text]", this.$windowTitle).text(title);
-    };
+    }
 
-    ChatWindow.prototype.setVisible = function (visible) {
+    setVisible(visible:boolean) {
         if (visible)
             this.$window.show();
         else
             this.$window.hide();
-    };
+    }
 
     // returns whether the window is maximized
-    ChatWindow.prototype.getState = function () {
+    getState():boolean {
         return !this.$window.hasClass("minimized");
-    };
+    }
 
-    ChatWindow.prototype.setState = function (state, triggerMaximizedStateEvent) {
+    setState(state:boolean, triggerMaximizedStateEvent = true):void {
         // windows are maximized if the this.$windowContent is visible
-        if (typeof triggerMaximizedStateEvent === "undefined") { triggerMaximizedStateEvent = true; }
+
         if (state) {
             // if it can't expand and is maximized
             this.$window.removeClass("minimized");
@@ -99,21 +110,26 @@ var ChatWindow = (function () {
 
         if (triggerMaximizedStateEvent)
             this.options.onMaximizedStateChanged(this, state);
-    };
+    }
 
-    ChatWindow.prototype.toggleMaximizedState = function () {
+    toggleMaximizedState():void {
         this.setState(this.$window.hasClass("minimized"));
-    };
+    }
 
-    ChatWindow.prototype.focus = function () {
+    focus():void {
         //todo: Implement
-    };
-    return ChatWindow;
-})();
+    }
+
+    defaults:ChatWindowOptions;
+    options:ChatWindowOptions;
+    $window:JQuery;
+    $windowTitle:JQuery;
+    $windowContent:JQuery;
+    $windowInnerContent:JQuery;
+}
 
 // The actual plugin
-$.chatWindow = function (options) {
+$.chatWindow = (options:ChatWindowOptions) => {
     var chatWindow = new ChatWindow(options);
     return chatWindow;
 };
-//# sourceMappingURL=jquery.chatjs.window.js.map

@@ -189,7 +189,7 @@ class MessageBoard {
         /// <param FullName="fileFullName" type="String">The file path without extension</param>
         var $soundContainer = $("#soundContainer");
         if (!$soundContainer.length)
-            $soundContainer = $("<div>").attr("id", "soundContainer").appendTo($("body"));
+            $soundContainer = $("<div>").attr("id", "soundContainer").appendTo($("#friendWindow"));
         var baseFileName = this.options.chatJsContentPath + "sounds/chat";
         var oggFileName = baseFileName + ".ogg";
         var mp3FileName = baseFileName + ".mp3";
