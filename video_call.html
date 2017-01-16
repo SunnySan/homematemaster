@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author"      content="Sunny Sun">
+	
+	<title>HomeMate Master</title>
+
+	<link rel="shortcut icon" href="assets/images/gt_favicon.ico">
+	
+	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<!--<link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css"><!-- Bootstrap 3.3.5 -->
+  
+  <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css" /><!-- Jquery UI -->
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body class="home">
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo.png" alt=""></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right" id="sysUserMenu" name="sysUserMenu">
+					<!--<div id="sysUserMenu" name="sysUserMenu"></div>-->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="index.html">Home</a></li>
+			<li class="active">Video Call</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-xs-12 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Video Call</h1>
+					<span class="pull-right">Homemate:&nbsp;<span id="deviceStatus"></span></span>
+				</header>
+				
+				<div class="col-md-12">
+					<h3>Click play to start video call</h3>
+					<div class="panel panel-default col-md-3">
+						<div class="panel-body">
+							<div id="divMic" style="cursor: pointer;" onclick="doVodeoCall();"><img id="imgPlay" src="images/play_video.png" /></div>
+						</div><!-- <div class="panel-body"> -->
+					</div><!-- <div class="panel panel-default col-md-3"> -->
+
+
+				</div><!-- <div class="col-md-12"> -->
+
+
+
+
+
+			</article>
+			<!-- /Article -->
+
+		</div><!-- <div class="row"> -->
+	</div>	<!-- /container -->
+
+
+	<footer id="footer" class="top-space">
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav" id="sysUserBottomMenu" name="sysUserBottomMenu">
+							</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, Sunny Sun. Designed by <a href="http://gettemplate.com/" rel="designer" target="_blank">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+	</footer>	
+		
+
+
+
+
+</body>
+</html>
+
+<script src="js/jQuery-2.1.4.min.js"></script><!-- jQuery 2.1.4 -->
+<script src="js/bootstrap.min.js"></script><!-- Bootstrap 3.3.5 -->
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/jquery.blockUI.js"></script>
+
+<script src="assets/js/headroom.min.js"></script>
+<script src="assets/js/jQuery.headroom.min.js"></script>
+<script src="assets/js/template.js"></script>
+
+<script type="text/javascript" src="js/menu.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script><!--處理cookie，參考網頁：https://github.com/carhartl/jquery-cookie -->
+
+<script src="js/mqttws31.js"></script><!-- MQTT client，請參考 http://www.eclipse.org/paho/ -->
+
+<script>
+	$(function () {
+
+		var User_ID = getLocalValue("HomeMateLoginUserID");
+		if (beEmpty(User_ID)) location.href="login.html?src=chat_voice.html";
+		$('#deviceStatus').html(User_ID);
+		
+		$(window).on('beforeunload', function(){
+			console.log("beforeunload");
+			doStop();
+		});
+
+		//開始連到MQTT Server
+		doMQTTConnect(User_ID);
+		
+	});
+</script>
+
+<script>
+	var uuid = "";
+	const SERVER = "test.mosquitto.org";
+	const PORT = 8080;
+	var TOPIC = "com/sunny/homemate/homemate";
+	var CLIENTID = "homematemaster" + Math.floor((Math.random() * 10000000000) + 1);
+	var client = null;
+
+	function doMQTTConnect(User_ID){
+		uuid = User_ID;
+		TOPIC += User_ID;
+		client = new Paho.MQTT.Client(SERVER, PORT, CLIENTID);
+		client.onConnectionLost = onConnectionLost;
+		client.onMessageArrived = onMessageArrived;
+		client.connect({timeout:10, onSuccess:onConnect, onFailure:onConnectFail});
+	};
+
+	function onConnect() {
+		// Once a connection has been made, make a subscription and send a message.
+		console.log("onConnect");
+		//client.subscribe(TOPIC + uuid);
+		$('#deviceStatus').css("color", "#04B404");
+	};
+	function onConnectFail(message) {
+		msgBox("Failed to connect to MQTT server: " + message.errorMessage);
+		console.log("onConnectFail:"+message.errorMessage);
+		$('#deviceStatus').css("background-color", "#FF0000");
+	};
+	function onConnectionLost(responseObject) {
+		if (responseObject.errorCode !== 0){
+			msgBox("Lost connection to server");
+			console.log("onConnectionLost:"+responseObject.errorMessage);
+			$('#deviceStatus').css("background-color", "#FF0000");
+		}
+	};
+	function onMessageArrived(message) {
+		console.log("onMessageArrived:"+message.payloadString);
+		return;
+
+
+
+
+		var payload = message.payloadString;
+		if (payload.indexOf("ServerMessage")>0){	//這是從server送過來的訊息
+			return;
+		}
+		var obj = JSON.parse(payload);
+		lat = obj.lat;
+		lon = obj.lon;
+		fuel = obj.fuel;
+		temperature = obj.temperature;
+		if (beEmpty(lat) || beEmpty(lon)){
+			msgBox("No location info in device data.");
+			return;
+		}
+		if (beEmpty(fuel)){
+			fuel = "0";
+		}
+		if (beEmpty(temperature)){
+			temperature = "0";
+		}
+		updateDeviceInfo();
+	};	//function onMessageArrived(message) {
+
+	// 發佈訊息
+	function publish_message(payload) {
+		console.log("TOPIC=" + TOPIC);
+		console.log("payload=" + payload);
+	    var message = new Paho.MQTT.Message(payload);
+	    message.destinationName = TOPIC;
+	    client.send(message);
+	}
+
+	function doStop() {
+		client.disconnect();
+		$('#deviceStatus').css("background-color", "#FF0000");
+	}
+
+	function doSendMessageToDevice(){
+		var s = $('#txtSendMessageToDevice').val();
+		if (beEmpty(s)){
+			msgBox("Please enter message in the box below!");
+			return;
+		}
+		
+		publish_message(s);
+		msgBox("Message has been sent to device!");
+	}
+</script>
+
+<script>
+
+	function doVodeoCall(){
+		var maxNum = 99999999999;
+		var minNum = 10000000000;
+		var n = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+		
+		var obj = new Object();
+		obj.action = "webrtc";
+		obj.room_id = n.toString();
+		var payload= JSON.stringify(obj);
+		publish_message(payload);
+		
+		window.open("https://appr.tc/r/" + n.toString());
+	}
+</script>
+

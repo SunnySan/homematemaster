@@ -63,6 +63,11 @@ function generateMenu(){
 	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
 	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
 
+	pageName = "video_call.html";
+	funcName = "Video Call";
+	s += '<li' + checkActivePage(pageName) + '><a href=' + pageName + '>' + funcName + '</a></li>';
+	s1 += '<a href="' + pageName + '">' + funcName + '</a> | ';
+
 	s += '			</ul>';
 	s += '		</li>';
 
