@@ -141,7 +141,7 @@
 	$(function () {
 
 		var User_ID = getLocalValue("HomeMateLoginUserID");
-		if (beEmpty(User_ID)) location.href="login.html?src=chat_voice.html";
+		if (beEmpty(User_ID)) location.href="login.html?src=video_call.html";
 		$('#deviceStatus').html(User_ID);
 		
 		$(window).on('beforeunload', function(){
